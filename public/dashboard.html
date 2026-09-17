@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — DabbaLedger</title>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">DabbaLedger</div>
+  <div>
+    <a href="/dashboard.html">Customers</a>
+    <a href="/billing.html">Month-end billing</a>
+    <button class="logout" id="logoutBtn">Log out</button>
+  </div>
+</div>
+
+<div class="app-shell">
+
+  <div class="panel">
+    <h2>Add a customer</h2>
+    <div id="addError"></div>
+    <form id="addCustomerForm" class="form-row">
+      <div>
+        <label for="cName">Name</label>
+        <input id="cName" required>
+      </div>
+      <div>
+        <label for="cPhone">Phone</label>
+        <input id="cPhone" required pattern="[0-9]{10}" title="10-digit phone number">
+      </div>
+      <div>
+        <label for="cAddress">Address</label>
+        <input id="cAddress">
+      </div>
+      <div style="flex:0 0 auto;">
+        <button class="primary" type="submit">Add customer</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Customers</h2>
+    <div class="toolbar">
+      <input id="searchInput" placeholder="Search name or phone…">
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="no_subscription">No subscription</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="pageSize">
+        <option value="10">10 / page</option>
+        <option value="25">25 / page</option>
+        <option value="50">50 / page</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="name">Name</th>
+          <th data-sort="phone">Phone</th>
+          <th>Plan</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="customerRows"></tbody>
+    </table>
+
+    <div class="pagination">
+      <button class="secondary" id="prevPage">Prev</button>
+      <span id="pageInfo" class="small"></span>
+      <button class="secondary" id="nextPage">Next</button>
+    </div>
+  </div>
+
+  <div class="panel" id="detailPanel" style="display:none;">
+    <h2 id="detailTitle">Customer</h2>
+    <div id="detailContent"></div>
+  </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — DabbaLedger</title>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>DabbaLedger</h1>
+    <p class="small" style="text-align:center; margin-bottom:18px;">Owner login</p>
+
+    <div class="auth-tabs">
+      <button id="tabLogin" class="active">Log in</button>
+      <button id="tabRegister">Register</button>
+    </div>
+
+    <div id="errorBox"></div>
+
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input id="loginEmail" type="email" required value="owner@tiffin.com">
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" required value="owner123">
+      <button class="primary" style="width:100%" type="submit">Log in</button>
+      <p class="small" style="margin-top:12px;">Demo login is pre-filled — just click Log in.</p>
+    </form>
+
+    <form id="registerForm" style="display:none">
+      <label for="regName">Your name</label>
+      <input id="regName" type="text" required>
+      <label for="regEmail">Email</label>
+      <input id="regEmail" type="email" required>
+      <label for="regPassword">Password</label>
+      <input id="regPassword" type="password" required minlength="6">
+      <button class="primary" style="width:100%" type="submit">Create account</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>
