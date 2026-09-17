@@ -15,7 +15,7 @@ function clearSession() {
 }
 
 function requireLogin() {
-  if (!getToken()) window.location.href = '/login.html';
+  if (!getToken()) window.location.href = 'login.html';
 }
 
 async function api(path, options = {}) {
@@ -28,7 +28,7 @@ async function api(path, options = {}) {
 
   if (res.status === 401) {
     clearSession();
-    window.location.href = '/login.html';
+    window.location.href = 'login.html';
     throw new Error('Not authenticated');
   }
   if (!res.ok) {

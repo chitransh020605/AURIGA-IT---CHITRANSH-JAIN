@@ -2,7 +2,7 @@ requireLogin();
 
 document.getElementById('logoutBtn').onclick = () => {
   clearSession();
-  window.location.href = '/login.html';
+  window.location.href = 'login.html';
 };
 
 const state = { page: 1, limit: 10, sort: 'name', order: 'asc', search: '', status: '' };
@@ -205,7 +205,7 @@ async function openCustomer(id) {
           </div>
         </form>
       `}
-      <p style="margin-top:16px;"><a href="/billing.html?subscription_id=${activeSub.id}">View this subscription's bill →</a></p>
+      <p style="margin-top:16px;"><a href="billing.html?subscription_id=${activeSub.id}">View this subscription's bill →</a></p>
 
       <h3 style="margin-top:20px;">Pause history</h3>
       ${activeSub.pauses.length ? `

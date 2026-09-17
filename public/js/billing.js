@@ -2,7 +2,7 @@ requireLogin();
 
 document.getElementById('logoutBtn').onclick = () => {
   clearSession();
-  window.location.href = '/login.html';
+  window.location.href = 'login.html';
 };
 
 function currentMonthStr() {

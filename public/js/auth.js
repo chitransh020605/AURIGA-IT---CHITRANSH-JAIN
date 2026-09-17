@@ -4,7 +4,7 @@ const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const errorBox = document.getElementById('errorBox');
 
-if (getToken()) window.location.href = '/dashboard.html';
+if (getToken()) window.location.href = 'dashboard.html';
 
 tabLogin.onclick = () => {
   tabLogin.classList.add('active');
@@ -30,7 +30,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('loginPassword').value;
     const data = await api('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
     setSession(data.token, data.owner);
-    window.location.href = '/dashboard.html';
+    window.location.href = 'dashboard.html';
   } catch (err) {
     errorBox.innerHTML = `<div class="error">${err.message}</div>`;
   }
@@ -45,7 +45,7 @@ registerForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('regPassword').value;
     const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password }) });
     setSession(data.token, data.owner);
-    window.location.href = '/dashboard.html';
+    window.location.href = 'dashboard.html';
   } catch (err) {
     errorBox.innerHTML = `<div class="error">${err.message}</div>`;
   }
