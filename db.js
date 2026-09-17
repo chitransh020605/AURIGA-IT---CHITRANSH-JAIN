@@ -48,6 +48,13 @@ CREATE TABLE IF NOT EXISTS pauses (
   end_date TEXT,                     -- YYYY-MM-DD (inclusive), NULL = open pause (still paused)
   reason TEXT
 );
+
+CREATE TABLE IF NOT EXISTS outbox (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_type TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
 `);
 
 // ---------- SEED (only if empty) ----------

@@ -13,6 +13,33 @@ const pageSizeSel = document.getElementById('pageSize');
 const rowsBody = document.getElementById('customerRows');
 const pageInfo = document.getElementById('pageInfo');
 
+document.getElementById('clockDate').value = todayStr();
+document.getElementById('clockForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const result = document.getElementById('clockResult');
+  try {
+    const date = document.getElementById('clockDate').value;
+    const response = await api('/clock', { method: 'POST', body: JSON.stringify({ date }) });
+    result.textContent = `${response.notifications.length} delivery notification(s) queued for ${date}.`;
+  } catch (error) {
+    result.textContent = error.message;
+  }
+});
+
+document.getElementById('importForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const result = document.getElementById('importResult');
+  try {
+    const customers = JSON.parse(document.getElementById('importJson').value);
+    const report = await api('/import/customers', { method: 'POST', body: JSON.stringify({ customers }) });
+    result.textContent = `Imported ${report.imported.length}; deduped ${report.deduped.length}; rejected ${report.rejected.length}.`;
+    event.target.reset();
+    loadCustomers();
+  } catch (error) {
+    result.textContent = error.message;
+  }
+});
+
 let searchDebounce;
 searchInput.addEventListener('input', () => {
   clearTimeout(searchDebounce);

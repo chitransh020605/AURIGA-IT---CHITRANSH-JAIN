@@ -93,6 +93,49 @@ router.post('/:id/cancel', (req, res) => {
   res.json({ message: 'Subscription cancelled', subscription_id: sub.id, end_date: today });
 });
 
+// POST /api/subscriptions/:id/transfer { new_customer_id, transfer_date }
+router.post('/:id/transfer', (req, res) => {
+  const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(req.params.id);
+  if (!sub) return res.status(404).json({ error: 'Subscription not found' });
+  if (sub.status === 'cancelled') return res.status(400).json({ error: 'Subscription is cancelled' });
+  const { new_customer_id: newCustomerId, transfer_date: transferDate } = req.body;
+  if (!newCustomerId || !transferDate || !/^\d{4}-\d{2}-\d{2}$/.test(transferDate)) {
+    return res.status(400).json({ error: 'new_customer_id and transfer_date (YYYY-MM-DD) are required' });
+  }
+  if (transferDate <= sub.start_date || (sub.end_date && transferDate > sub.end_date)) {
+    return res.status(400).json({ error: 'transfer_date must be inside the subscription cycle' });
+  }
+  if (!db.prepare('SELECT id FROM customers WHERE id = ?').get(newCustomerId)) {
+    return res.status(404).json({ error: 'New customer not found' });
+  }
+  if (db.prepare("SELECT id FROM subscriptions WHERE customer_id = ? AND status != 'cancelled'").get(newCustomerId)) {
+    return res.status(409).json({ error: 'New customer already has an active subscription' });
+  }
+  const previousDay = new Date(`${transferDate}T00:00:00Z`);
+  previousDay.setUTCDate(previousDay.getUTCDate() - 1);
+  const oldEnd = previousDay.toISOString().slice(0, 10);
+  db.exec('BEGIN');
+  let result;
+  try {
+    db.prepare('UPDATE subscriptions SET end_date = ?, status = ? WHERE id = ?').run(oldEnd, 'cancelled', sub.id);
+    result = db.prepare('INSERT INTO subscriptions (customer_id, plan_id, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)')
+      .run(newCustomerId, sub.plan_id, transferDate, sub.end_date, sub.status === 'paused' ? 'paused' : 'active');
+    const pauses = db.prepare(
+      `SELECT start_date, end_date, reason FROM pauses
+       WHERE subscription_id = ? AND (end_date IS NULL OR end_date >= ?)`
+    ).all(sub.id, transferDate);
+    for (const pause of pauses) {
+      db.prepare('INSERT INTO pauses (subscription_id, start_date, end_date, reason) VALUES (?, ?, ?, ?)')
+        .run(result.lastInsertRowid, pause.start_date < transferDate ? transferDate : pause.start_date, pause.end_date, pause.reason);
+    }
+    db.exec('COMMIT');
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
+  }
+  res.status(201).json({ old_subscription_id: sub.id, new_subscription_id: Number(result.lastInsertRowid), transfer_date: transferDate, plan_id: sub.plan_id });
+});
+
 // GET /api/subscriptions?status=active|paused&page=&limit=&sort=&order=
 router.get('/', (req, res) => {
   const { status = '', page = 1, limit = 10 } = req.query;

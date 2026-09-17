@@ -82,6 +82,14 @@ All routes except `/api/auth/*` require an `Authorization: Bearer <token>` heade
 | GET | `/api/billing/subscription/:id` | `?month=YYYY-MM` | Pro-rated bill for one subscription |
 | GET | `/api/billing` | `?month=YYYY-MM&page=&limit=&sort=customer_name\|amount\|deliveredDays&order=` | Month-end bill for every customer, paginated + sorted, with total revenue |
 
+### Twists
+| Method | Endpoint | Body | Notes |
+|---|---|---|---|
+| POST | `/clock` or `/api/clock` | `{ date: "YYYY-MM-DD" }` | Creates `delivery_due` notification events for weekday deliveries that are active and not paused |
+| GET | `/outbox` or `/api/outbox` | — | Reads notification events for the Notification Service/grader |
+| POST | `/api/subscriptions/:id/transfer` | `{ new_customer_id, transfer_date }` | Splits one cycle at the transfer date and carries the plan and applicable pauses forward |
+| POST | `/api/import/customers` | `{ customers: [{ name, phone, address, plan_id, start_date }] }` | Imports normalized customers/subscriptions and returns `{ imported, deduped, rejected }` |
+
 ## Billing rule (how the pro-ration works)
 
 Tiffin is delivered on weekdays (Mon–Fri) only.

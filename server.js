@@ -10,6 +10,8 @@ const customerRoutes = require('./routes/customers');
 const planRoutes = require('./routes/plans');
 const subscriptionRoutes = require('./routes/subscriptions');
 const billingRoutes = require('./routes/billing');
+const importRoutes = require('./routes/imports');
+const clockRoutes = require('./routes/clock');
 
 const app = express();
 app.use(cors());
@@ -20,6 +22,9 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/import', importRoutes);
+app.use('/api', clockRoutes.authenticated);
+app.use('/', clockRoutes.router);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

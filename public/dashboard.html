@@ -80,6 +80,27 @@
     </div>
   </div>
 
+  <div class="panel">
+    <h2>Daily operations</h2>
+    <form id="clockForm" class="form-row">
+      <div>
+        <label for="clockDate">Delivery date</label>
+        <input type="date" id="clockDate" required>
+      </div>
+      <div style="flex:0 0 auto;">
+        <button class="primary" type="submit">Notify due deliveries</button>
+      </div>
+    </form>
+    <div id="clockResult" class="small"></div>
+    <h3>Import customers and subscriptions</h3>
+    <form id="importForm">
+      <label for="importJson">Rows as JSON</label>
+      <textarea id="importJson" rows="4" placeholder='[{"name":"Asha","phone":"98765 43210","plan_id":1,"start_date":"17/09/2026"}]' required></textarea>
+      <button class="secondary" type="submit">Import rows</button>
+    </form>
+    <div id="importResult" class="small"></div>
+  </div>
+
   <div class="panel" id="detailPanel" style="display:none;">
     <h2 id="detailTitle">Customer</h2>
     <div id="detailContent"></div>
